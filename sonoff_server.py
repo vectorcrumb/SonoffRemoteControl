@@ -1,15 +1,14 @@
 from flask import Flask, request, make_response, jsonify
 from flask_sockets import Sockets
 from geventwebsocket.exceptions import WebSocketError
-import gevent
-import json, requests, time
+import gevent, requests
+import json, time
 from datetime import datetime
 from uuid import uuid4
 
 app = Flask(__name__)
 sockets = Sockets(app)
 
-state = False
 ws_ref = None
 device_id = None
 
@@ -20,7 +19,6 @@ wifi_ssid = configs['network']['SSID']
 wifi_password = configs['network']['password']
 wifi_server_name = configs['server']['IP']
 wifi_server_port = configs['server']['port']
-wifi_wsserver_port = configs['server']['wsport']
 uuidkey = str(uuid4())
 
 def generate_switch_payload(dev_id, state1=False, state2=False):
@@ -57,16 +55,12 @@ def generate_switch_payload(dev_id, state1=False, state2=False):
     }
     return payload
 
-def tick_tock(delay):
-    print("POST Heartbeat: Tic")
-    time.sleep(delay)
-    print("POST Heartbeat: Toc")
 
 @app.route('/')
 def main_route():
     return make_response('OK')
 
-@app.route('/on')
+@app.route('/on', methods=['GET'])
 def on_switches():
     global device_id, ws_ref
     if ws_ref == None or device_id == None:
@@ -77,7 +71,7 @@ def on_switches():
     return make_response("on")
 
 
-@app.route('/off')
+@app.route('/off', methods=['GET'])
 def off_switches():
     global device_id, ws_ref
     if ws_ref == None or device_id == None:
@@ -90,17 +84,13 @@ def off_switches():
 
 @app.route('/dispatch/device', methods=['POST'])
 def ws_config():
-    global state
     print("REQ | {} | {}".format(request.method, request.url))
     print("REQ | {}".format(request.json))
-    if (request.json['deviceid'] == '100024ff33'):
-        state = True
-    gevent.spawn(tick_tock, 0.5)
     payload = {
         "error": 0,
         "reason": "ok",
         "IP": wifi_server_name,
-        "port": wifi_wsserver_port
+        "port": wifi_server_port
     }
     resp = make_response(json.dumps(payload))
     resp.headers['Content-Type'] = 'application/json'
