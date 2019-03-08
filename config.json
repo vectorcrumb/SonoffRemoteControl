@@ -1,0 +1,21 @@
+{
+    "device": {
+        "IP": "10.10.7.1",
+        "apikey": "f62af887-ecb5-422f-9ebe-fe7a571972bf",
+        "deviceid": "100024ff33",
+        "protocol": "http://"
+    },
+    "network": {
+        "SSID": "RedHogar018",
+        "password": "fzx!.810.!Nriv"
+    },
+    "server": {
+        "IP": "192.168.0.22",
+        "port": 1081,
+        "wsport": 1081
+    },
+    "ssl": {
+        "cert": "cert.pem",
+        "key": "key.pem"
+    }
+}
