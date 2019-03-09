@@ -11,6 +11,7 @@ sockets = Sockets(app)
 
 ws_ref = None
 device_id = None
+device_ip = None
 
 with open('config.json') as config_f:
     configs = json.load(config_f)
@@ -60,6 +61,19 @@ def generate_switch_payload(dev_id, state1=False, state2=False):
 def main_route():
     return make_response('OK')
 
+
+@app.route('/state', methods=['POST'])
+def state_switches():
+    global device_id, ws_ref
+    if ws_ref == None or device_id == None:
+        return make_response("Websockets connection not established. Unable to control switch")
+    else:
+        command = request.json
+        payload = generate_switch_payload(device_id, command['0'], command['1'])
+        ws_ref.send(json.dumps(payload))
+    return make_response('STATE')
+    
+
 @app.route('/on', methods=['GET'])
 def on_switches():
     global device_id, ws_ref
@@ -84,7 +98,8 @@ def off_switches():
 
 @app.route('/dispatch/device', methods=['POST'])
 def ws_config():
-    print("REQ | {} | {}".format(request.method, request.url))
+    global device_ip
+    print("REQ | {} | {} | {}".format(request.method, request.url, request.remote_addr))
     print("REQ | {}".format(request.json))
     payload = {
         "error": 0,
@@ -92,6 +107,8 @@ def ws_config():
         "IP": wifi_server_name,
         "port": wifi_server_port
     }
+    if device_ip == None:
+        device_ip = request.remote_addr
     resp = make_response(json.dumps(payload))
     resp.headers['Content-Type'] = 'application/json'
     return resp

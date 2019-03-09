@@ -29,6 +29,7 @@ El script de configuracion y el servidor hacen uso del archivo de configuracion,
     }
 }
 ```
+Luego de ejecutar el archivo de configuracion 
 
 ## Configurar un Sonoff Dual
 
@@ -52,4 +53,4 @@ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out cert.pe
 
  ## Controlar el Sonoff Dual
 
- 
+Para controlar el Sonoff se puede usar el objeto `SonoffController` en el archivo `sonoff_control.py`. Un ejemplo de como usar esta clase se encuentra en `example.py`. No es recomendable activar y desactivar rapidamente y continuamente los reles, pues el Sonoff se sobrecalienta.
