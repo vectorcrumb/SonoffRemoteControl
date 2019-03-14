@@ -5,7 +5,7 @@ sonoff = SonoffController('localhost', '8080')
 
 sonoff.set_state(False, False)
 sleep(0.5)
-sonoff.set_state(True, False)
+print(sonoff.set_state(True, False))
 sleep(2)
 sonoff.set_state(False, False)
 sleep(2)

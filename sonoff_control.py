@@ -9,6 +9,16 @@ class SonoffController():
         self.server_port = str(port_server)
     
     def set_state(self, switch0_state=False, switch1_state=False):
+        """Sets sonoff dual state via an POST request to the node server
+        
+        Keyword Arguments:
+            switch0_state {bool} -- State of switch 0 (default: {False})
+            switch1_state {bool} -- State of switch 1 (default: {False})
+        
+        Returns:
+            status_code -- Status code of HTTP request. A code 500 indicates an error.
+        """
+
         req_state = requests.post("http://" + self.server_ip + ":" + self.server_port + "/state", json=
         {
             "0": 'on' if switch0_state else 'off',
