@@ -1,7 +1,7 @@
 from sonoff_control import SonoffController
 from time import sleep
 
-sonoff = SonoffController('192.168.0.22', '1081')
+sonoff = SonoffController('localhost', '8080')
 
 sonoff.set_state(False, False)
 sleep(0.5)

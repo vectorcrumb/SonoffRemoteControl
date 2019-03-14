@@ -1,7 +1,7 @@
 import requests, json
 
 
-with open('config.json') as config_f:
+with open('config_lan.json') as config_f:
     configs = json.load(config_f)
 
 wifi_ssid = configs['network']['SSID']

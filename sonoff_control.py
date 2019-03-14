@@ -1,5 +1,4 @@
-import json, requests, warnings
-from urllib3.connectionpool import InsecureRequestWarning
+import json, requests
 
 class SonoffController():
 
@@ -10,12 +9,11 @@ class SonoffController():
         self.server_port = str(port_server)
     
     def set_state(self, switch0_state=False, switch1_state=False):
-        with warnings.catch_warnings():
-            warnings.simplefilter('ignore', InsecureRequestWarning)
-            req_state = requests.post("https://" + self.server_ip + ":" + self.server_port + "/state", json=
-            {
-                "0": switch0_state,
-                "1": switch1_state
-            }, headers={
-                "Content-Type": "application/json"
-            }, verify=False)
+        req_state = requests.post("http://" + self.server_ip + ":" + self.server_port + "/state", json=
+        {
+            "0": 'on' if switch0_state else 'off',
+            "1": 'on' if switch1_state else 'off'
+        }, headers={
+            "Content-Type": "application/json"
+        })
+        return req_state.status_code

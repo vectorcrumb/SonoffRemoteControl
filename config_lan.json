@@ -1,0 +1,18 @@
+{
+    "device": {
+        "IP": "10.10.7.1",
+        "protocol": "http://"
+    },
+    "network": {
+        "SSID": "LucasPixel2",
+        "password": "123456789"
+    },
+    "server": {
+        "IP": "192.168.0.200",
+        "port": 8433
+    },
+    "ssl": {
+        "cert": "cert.pem",
+        "key": "key.pem"
+    }
+}
