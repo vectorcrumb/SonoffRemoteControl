@@ -30,22 +30,23 @@ Dentro de `server` es necesario poner una IP no asignada y un puerto arbitrario,
 ## Configurar un Sonoff Dual
 
  1. Conectar Sonoff a corriente. No es necesario conectar las salidas aun.
- 2. El Sonoff comenzara a parpader el LED azul. El patron sera ON - OFF (C) - ON - OFF(L). La C simboliza un tiempo corto y la L un tiempo largo.
+ 2. El Sonoff comenzara a parpader el LED azul. El patron sera ON - OFF (L). La C simboliza un tiempo corto y la L un tiempo largo.
  3. Dejar presionado el boton hasta que cambie el patron de parpadeo. Esto debiese demorar alrededor de 7 segundos. El patron nuevo sera ON - OFF (C) 3 veces, seguido de OFF (L).
  4. Volver a dejar presionado el boton hasta que cambie el patron de parpadeo. Esto debiese demorar alrededor de 7 segundos. El patron nuevo sera ON - OFF (C) continuamente. En este estado, el Sonoff inicia un AP Wifi con SSID `ITEAD_10000xxxxx` y clave `12345678`.
  5. Conectarse a AP Wifi.
  6. Ejecutar script de configuracion con `python sonoff_config.py`. El script realizará un GET para obtener el Device ID y API key y actualizará el archivo `config_lan.json`. Luego, enviará un POST para actualizar la configuracion del Sonoff, entregando la direccion vacia del servidor y las credenciales de la red wifi. Luego de recibir el segundo mensaje `REQA`, el Sonoff se encontrara configurado. Este ultimo mensaje deberá responder `{"error":0}` para confirmar que no tiene errores.
- 7. El Sonoff volverá a parpadear con el mismo patron que en el paso 2 y cerrará el AP. Seguirá parpadeando con este patron hasta establecer una conexion con el servidor.
+ 7. El Sonoff empezara a parpadear con patron ON - OFF (C) - ON - OFF(L), indicando que se conecto a la red. En caso de parpadear como en el paso (2), no logro establecer comunicacion con la red wifi.
 
  ## Ejecutar servidor para Sonoff Dual
  1. Determinar IP del Sonoff en la red wifi a la cual se conecto. Cambiar `.device.IPwifi` en `config_lan.json`.
+ 2. Esperar a que el Sonoff establezca comunicacion con la red (este parpadeando el patron ON - OFF (C) - ON - OFF(L)). Luego de establecer comunicacion, esperar 60 segundos para ingresar el modo de respaldo WLAN.
  2. Entrar a carpeta `/node_server` e instalar paquetes mediante `npm install`.
  3. Esperar 60 segundos antes de iniciar el servidor. Esto permite que el Sonoff entre a modo WLAN y pueda ser controlado por el node_server.
- 4. Ejecutar `npm run start` o `node index.js`. Esto abrira un servidor HTTP y WS en el puerto especificado al comienzo del programa. El Sonoff se conectará pasado un tiempo (maximo 60 segundos) al servidor WS.
+ 4. Ejecutar `npm run start` o `node index.js`. Esto abrira un servidor HTTP y WS en el puerto especificado al comienzo del programa. El Sonoff se conectará pasado un tiempo (maximo 60 segundos) al servidor WS. En caso de iniciar el servidor antes de que el Sonoff establezca la conexion a la red o inicie el modo de respaldo WLAN (abriendo un servidor Websockets en el proceso), el servidor arrojara un error, pero no cerrara el programa.
  5. El Sonoff permanecera parpadeando dos veces seguido de una pausa larga.
 
  ## Controlar el Sonoff Dual
 
 Para controlar el Sonoff se puede usar el objeto `SonoffController` en el archivo `sonoff_control.py`. Un ejemplo de como usar esta clase se encuentra en `example.py`. No es recomendable activar y desactivar rapidamente y continuamente los reles, pues el Sonoff se sobrecalienta.
 
-En caso de alejar el Sonoff de la red wifi a la cual se encuentre conectada, sera necesario reiniciar el servidor Node. No es necesario reinicar el Sonoff ni esperar, pues ya estara en modo WLAN.
+En caso de alejar el Sonoff de la red wifi a la cual se encuentre conectada, sera necesario reiniciar el servidor Node. No es necesario reinicar el Sonoff ni esperar, pues ya estara en modo WLAN. En caso de reinicio del Sonoff, seguir las instrucciones al final del paso 4 de la seccion anterior.

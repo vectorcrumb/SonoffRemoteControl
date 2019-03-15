@@ -3,12 +3,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 var fs = require('fs');
 
+process.on('uncaughtException', function (err) {
+    console.log('UNCAUGHT EXCEPTION - keeping process alive:', err);
+});
+
 var configFile = fs.readFileSync("../config_lan.json");
 var configs = JSON.parse(configFile);
 const IPADDRESS = configs['device']['IPwifi'];
 const PORT = 8080;
 console.log("Starting up SonoffControl server on port %d ...", PORT);
 console.log("WS Client connecting to %s:%d", IPADDRESS, 8081);
+
 
 const seq = () => String(Date.now());
 const ws = new WebSocket('ws://' + IPADDRESS + ':8081', [ 'chat' ]);
