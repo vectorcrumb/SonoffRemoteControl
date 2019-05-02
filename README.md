@@ -13,7 +13,8 @@ El script de configuracion y el servidor hacen uso del archivo de configuracion,
 {
     "device": {
         "IP": "10.10.7.1",
-        "protocol": "http://"
+        "protocol": "http://",
+        "IPwifi": "<IP de Sonoff en red>"
     },
     "network": {
         "SSID": "<SSID DE RED WIFI AL CUAL CONECTAR EL SONOFF>",
@@ -27,6 +28,24 @@ El script de configuracion y el servidor hacen uso del archivo de configuracion,
 ```
 Dentro de `server` es necesario poner una IP no asignada y un puerto arbitrario, pues se busca forzar el Sonoff a modo WLAN (donde no ha podido establecer comunicacion con ningun servidor Websockets).
 
+## Instalar dependencias
+
+ 1. Instalar las siguientes dependencias mediante `apt`: 
+ ```
+ sudo apt-get install curl python3 python3-pip
+ ```
+ 2. Instalar NodeJS y NPM. Las instrucciones de instalacion se encuentran en [este repositorio](https://github.com/nodesource/distributions#deb). Se debe instalar la version 6.x junto a los build tools. Los comandos son los siguientes en Ubuntu:
+ ```
+ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+ sudo apt-get install -y nodejs
+ sudo apt-get install -y build-essential
+ ```
+ 3. Instalar dependencias de NodeJS. Esto se detalla en el paso 2 de ejecutar el servidor. Este paso debe realizarse conectado a la internet.
+ 4. Instalar dependencias de Python3. Esto se realiza mediante el siguiente comando:
+ ```
+ pip install -r requirements.txt
+ ```
+
 ## Configurar un Sonoff Dual
 
  1. Conectar Sonoff a corriente. No es necesario conectar las salidas aun.
@@ -34,7 +53,7 @@ Dentro de `server` es necesario poner una IP no asignada y un puerto arbitrario,
  3. Dejar presionado el boton hasta que cambie el patron de parpadeo. Esto debiese demorar alrededor de 7 segundos. El patron nuevo sera ON - OFF (C) 3 veces, seguido de OFF (L).
  4. Volver a dejar presionado el boton hasta que cambie el patron de parpadeo. Esto debiese demorar alrededor de 7 segundos. El patron nuevo sera ON - OFF (C) continuamente. En este estado, el Sonoff inicia un AP Wifi con SSID `ITEAD_10000xxxxx` y clave `12345678`.
  5. Conectarse a AP Wifi.
- 6. Ejecutar script de configuracion con `python sonoff_config.py`. El script realizará un GET para obtener el Device ID y API key y actualizará el archivo `config_lan.json`. Luego, enviará un POST para actualizar la configuracion del Sonoff, entregando la direccion vacia del servidor y las credenciales de la red wifi. Luego de recibir el segundo mensaje `REQA`, el Sonoff se encontrara configurado. Este ultimo mensaje deberá responder `{"error":0}` para confirmar que no tiene errores.
+ 6. Ejecutar script de configuracion con `python3 sonoff_config.py`. El script realizará un GET para obtener el Device ID y API key y actualizará el archivo `config_lan.json`. Luego, enviará un POST para actualizar la configuracion del Sonoff, entregando la direccion vacia del servidor y las credenciales de la red wifi. Luego de recibir el segundo mensaje `REQA`, el Sonoff se encontrara configurado. Este ultimo mensaje deberá responder `{"error":0}` para confirmar que no tiene errores.
  7. El Sonoff empezara a parpadear con patron ON - OFF (C) - ON - OFF(L), indicando que se conecto a la red. En caso de parpadear como en el paso (2), no logro establecer comunicacion con la red wifi.
 
  ## Ejecutar servidor para Sonoff Dual
