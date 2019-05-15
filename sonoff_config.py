@@ -17,7 +17,7 @@ print("REQA | {}".format(req_get_device_id.text))
 configs['device']['deviceid'] = str(req_get_device_id.json()['deviceid'])
 configs['device']['apikey'] = str(req_get_device_id.json()['apikey'])
 print("Update device ID and API key. Storing the following config file: {}".format(configs))
-with open('config.json', 'w') as config_f:
+with open('device_info.json', 'w') as config_f:
     json.dump(configs, config_f, indent=4, sort_keys=True)
 
 # Send a post with SSID information to connect Sonoff device

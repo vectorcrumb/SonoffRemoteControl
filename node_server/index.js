@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 var fs = require('fs');
 
+process.title = "sonoff_server";
+
 process.on('uncaughtException', function (err) {
     console.log('UNCAUGHT EXCEPTION - keeping process alive:', err);
 });
