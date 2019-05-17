@@ -2,10 +2,10 @@
     "device": {
         "IP": "10.10.7.1",
         "protocol": "http://",
-        "IPwifi": "192.168.0.100"
+        "IPwifi": "192.168.1.100"
     },
     "network": {
-        "SSID": "",
+        "SSID": "Zippedi",
         "password": ""
     },
     "server": {

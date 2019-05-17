@@ -1,4 +1,5 @@
 import json, requests
+import time
 
 class SonoffController():
 
@@ -27,3 +28,18 @@ class SonoffController():
             "Content-Type": "application/json"
         })
         return req_state.status_code
+
+    def open(self, timer=30):
+        self.set_state(True, False)
+        t = time.time()
+        while(time.time()<t+timer):
+            pass
+        self.set_state(False, False)
+
+    def close(self, timer=30):
+        self.set_state(False, True)
+        t = time.time()
+        while(time.time()<t+timer):
+            pass
+        self.set_state(False, False)
+
